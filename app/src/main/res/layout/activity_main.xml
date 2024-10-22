@@ -58,14 +58,14 @@
             android:autofillHints="password"
             android:background="@drawable/rounded_edittext"
             android:ems="10"
-            android:textColorHint="#031927"
+            android:textColorHint="@color/blue_darker"
             android:fontFamily="@font/garetbook"
             android:hint="@string/password_text"
             android:inputType="textPassword"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/activityMainLabelMeetUs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -86,8 +86,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:background="#46B4D2E1"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:srcCompat="@drawable/icons8_facebook_nuevo_50"/>
+        app:layout_constraintTop_toBottomOf="@+id/activityMainLabelMeetUs"
+        app:srcCompat="@drawable/ic_facebook"/>
 
     <ImageView
         android:id="@+id/imageViewYout"
@@ -98,8 +98,9 @@
         android:contentDescription="@string/ic_youtube"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.736"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/imageViewIg"
+        app:layout_constraintTop_toBottomOf="@+id/activityMainLabelMeetUs"
         app:srcCompat="@drawable/icons8_youtube_50" />
 
     <ImageView
@@ -111,7 +112,7 @@
         android:contentDescription="@string/ic_ig"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageViewFac"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/activityMainLabelMeetUs"
         app:srcCompat="@drawable/icons8_instagram_50" />
 
     <Button
@@ -119,14 +120,12 @@
         android:layout_width="283dp"
         android:layout_height="53dp"
         android:layout_marginTop="56dp"
-        android:background="@drawable/botonesmain"
+        android:backgroundTint="@color/blue_darker_button"
         android:fontFamily="@font/garetbook"
         android:text="@string/access_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.531"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

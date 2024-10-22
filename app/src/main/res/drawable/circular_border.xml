@@ -1,0 +1,11 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Color de fondo de la imagen, lo puedes cambiar o dejar transparente -->
+    <solid android:color="@android:color/transparent" />
+
+    <!-- Bordes redondeados para hacer el contorno circular -->
+    <corners android:radius="50dp" /> <!-- Asegúrate de que este valor sea grande para redondear completamente -->
+
+    <stroke
+        android:width="2dp"
+    android:color="@android:color/darker_gray" />
+</shape>
