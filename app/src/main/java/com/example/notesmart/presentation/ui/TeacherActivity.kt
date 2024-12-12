@@ -1,4 +1,4 @@
-package com.example.notesmart
+package com.example.notesmart.presentation.ui
 
 import android.app.Activity
 
