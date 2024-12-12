@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">NoteSmart</string>
+    <string name="label_access">Acceso</string>
+    <string name="email_text">Correo Electrónico</string>
+    <string name="password_text">Contraseña</string>
+    <string name="access_button">Acceder</string>
+    <string name="meet_us">Conocenos</string>
+    <string name="ic_facebook">Icono Facebook</string>
+    <string name="ic_ig">Icono Instagram</string>
+    <string name="ic_youtube">Icono Youtube</string>
+    <string name="teacher_name">Profesor</string>
+    <string name="teacher_icon">Foto del profesor</string>
+</resources>
