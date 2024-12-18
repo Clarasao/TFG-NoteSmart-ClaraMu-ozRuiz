@@ -8,6 +8,11 @@
     <string name="ic_facebook">Icono Facebook</string>
     <string name="ic_ig">Icono Instagram</string>
     <string name="ic_youtube">Icono Youtube</string>
-    <string name="teacher_name">Profesor</string>
-    <string name="teacher_icon">Foto del profesor</string>
+    <string name="teacher_name">Professor</string>
+    <string name="teacher_icon">Foto del professor</string>
+    <string name="name_teacher">Nombre del Professor</string>
+    <string name="surname_teacher">Apellido del Professor</string>
+    <string name="eventOfDay">Eventos del día</string>
+    <string name="saveNotes">Guardar Notas</string>
+    <string name="editEvent">Editar Evento</string>
 </resources>

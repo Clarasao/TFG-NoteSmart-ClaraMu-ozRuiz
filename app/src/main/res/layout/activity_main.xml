@@ -34,7 +34,7 @@
         android:fontFamily="@font/garetbook"
         android:hint="@string/email_text"
         android:inputType="textEmailAddress"
-        android:textColorHint="@color/blue_darker"
+        android:textColorHint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activityMainLabelAccess" />
@@ -57,7 +57,7 @@
             android:autofillHints="password"
             android:background="@drawable/rounded_edittext"
             android:ems="10"
-            android:textColorHint="@color/blue_darker"
+            android:textColorHint="@color/white"
             android:fontFamily="@font/garetbook"
             android:hint="@string/password_text"
             android:inputType="textPassword"/>
@@ -67,7 +67,7 @@
         android:id="@+id/activityMainLabelMeetUs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="45dp"
         android:fontFamily="@font/fuentemoderniz"
         android:text="@string/meet_us"
         android:textColor="@color/white"

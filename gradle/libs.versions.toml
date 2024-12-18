@@ -1,5 +1,7 @@
 [versions]
 agp = "8.5.2"
+appcompatVersion = "1.7.0"
+calendarview = "1.0.0"
 kotlin = "1.9.23"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -9,9 +11,14 @@ appcompat = "1.7.0"
 material = "1.12.0"
 activity = "1.9.3"
 constraintlayout = "2.2.0"
+materialCalendarview = "2.0.0"
+materialCalendarviewVersion = "2.0.0."
+materialVersion = "1.12.0"
 volley = "1.2.1"
 
 [libraries]
+androidx-appcompat-v160 = { module = "androidx.appcompat:appcompat", version.ref = "appcompatVersion" }
+androidx-calendarview = { module = "androidx.calendarview:calendarview", version.ref = "calendarview" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -20,6 +27,9 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+material-calendarview = { module = "com.prolificinteractive:material-calendarview", version.ref = "materialCalendarview" }
+material-calendarview-v200 = { module = "com.prolificinteractive:material-calendarview", version.ref = "materialCalendarviewVersion" }
+material-v190 = { module = "com.google.android.material:material", version.ref = "materialVersion" }
 volley = { module = "com.android.volley:volley", version.ref = "volley" }
 
 [plugins]

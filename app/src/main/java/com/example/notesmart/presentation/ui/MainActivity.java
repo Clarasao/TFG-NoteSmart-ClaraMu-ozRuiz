@@ -1,5 +1,6 @@
 package com.example.notesmart.presentation.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,7 +17,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
-    private final String urlLogin = "http://192.168.0.178/school/login.php";
+    private final String urlLogin = "http://10.0.2.2/school/login.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +47,18 @@ public class MainActivity extends AppCompatActivity {
                         String status = jsonResponse.getString("status");
 
                         if ("success".equals(status)) {
+                            String name = jsonResponse.getString("name");
+                            String lastName = jsonResponse.getString("surname");
+                            int courseId = jsonResponse.getInt("courseId");
+
                             Toast.makeText(this, "Acceso concedido", Toast.LENGTH_SHORT).show();
+
+                            Intent intent = new Intent(this, TeacherActivity.class);
+                            intent.putExtra("name", name);
+                            intent.putExtra("surname", lastName);
+                            intent.putExtra("courseId", courseId);
+                            startActivity(intent);
+
                         } else {
                             String message = jsonResponse.getString("message");
                             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
