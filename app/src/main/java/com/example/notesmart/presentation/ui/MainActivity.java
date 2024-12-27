@@ -50,15 +50,24 @@ public class MainActivity extends AppCompatActivity {
                             String name = jsonResponse.getString("name");
                             String lastName = jsonResponse.getString("surname");
                             int courseId = jsonResponse.getInt("courseId");
+                            String userType = jsonResponse.getString("userType"); // Assuming userType is part of the response
 
                             Toast.makeText(this, "Acceso concedido", Toast.LENGTH_SHORT).show();
 
-                            Intent intent = new Intent(this, TeacherActivity.class);
-                            intent.putExtra("name", name);
-                            intent.putExtra("surname", lastName);
-                            intent.putExtra("courseId", courseId);
-                            startActivity(intent);
+                            Intent intent;
+                            if ("student".equals(userType)) {
+                                intent = new Intent(this, StudentActivity.class);
+                                intent.putExtra("name", name);
+                                intent.putExtra("surname", lastName);
+                                intent.putExtra("grade", courseId);
+                            } else {
+                                intent = new Intent(this, TeacherActivity.class);
+                                intent.putExtra("name", name);
+                                intent.putExtra("surname", lastName);
+                                intent.putExtra("courseId", courseId);
+                            }
 
+                            startActivity(intent);
                         } else {
                             String message = jsonResponse.getString("message");
                             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();

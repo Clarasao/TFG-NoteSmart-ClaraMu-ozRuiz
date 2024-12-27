@@ -15,4 +15,10 @@
     <string name="eventOfDay">Eventos del día</string>
     <string name="saveNotes">Guardar Notas</string>
     <string name="editEvent">Editar Evento</string>
+    <string name="grade_teacher">Curso profesor</string>
+    <string name="clock">00:00:00</string>
+    <string name="student_icon">Icono de estudiante</string>
+    <string name="name_student">Nombre estudiante</string>
+    <string name="surname_student">Apellidos estudiante</string>
+    <string name="grade_student">Curso estudiante</string>
 </resources>

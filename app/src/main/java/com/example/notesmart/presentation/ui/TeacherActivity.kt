@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.os.Bundle
+import android.os.Handler
+import android.text.InputType
 import android.widget.*
 import com.android.volley.Request
 import com.android.volley.Response
@@ -14,6 +16,9 @@ import com.example.notesmart.data.model.StudentModel
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 import kotlin.random.Random
 
 class TeacherActivity : Activity() {
@@ -30,6 +35,8 @@ class TeacherActivity : Activity() {
 
     private val studentList = mutableListOf<StudentModel>()
     private val subjectMap = mutableMapOf<Int, String>()
+    private lateinit var tvClock: TextView
+    private val handler = Handler()
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +47,8 @@ class TeacherActivity : Activity() {
         val teacherLastName = intent.getStringExtra("surname") ?: "Apellido no disponible"
         val teacherGradeId = intent.getIntExtra("courseId", 0)
 
+        tvClock = findViewById(R.id.tvClock)
+
         val tvProfesorName = findViewById<TextView>(R.id.tvProfesorNombre)
         val tvProfesorSurname = findViewById<TextView>(R.id.tvProfesorApellido)
         val calendarView = findViewById<CalendarView>(R.id.calendarView)
@@ -47,9 +56,34 @@ class TeacherActivity : Activity() {
         val btnEditarEvento = findViewById<Button>(R.id.btnEditarEvento)
         val lvStudents = findViewById<ListView>(R.id.lvStudents)
         val tvCurso = findViewById<TextView>(R.id.tvCurso)
+        val tvProfesorCurso = findViewById<TextView>(R.id.tvProfesorCurso)
+
+
+        val runnable = object : Runnable {
+            override fun run() {
+                val currentDateTime = Calendar.getInstance().time
+                val formatter = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+                val formattedTime = formatter.format(currentDateTime)
+
+                tvClock.text = formattedTime
+
+                handler.postDelayed(this, 1000)
+            }
+        }
+
+        val teacherCourse = when (teacherGradeId) {
+            1 -> "1º ESO"
+            2 -> "2º ESO"
+            3 -> "3º ESO"
+            4 -> "4º ESO"
+            5 -> "1º Bachillerato"
+            6 -> "2º Bachillerato"
+            else -> "Curso desconocido"
+        }
 
         tvProfesorName.text = teacherName
         tvProfesorSurname.text = teacherLastName
+        tvProfesorCurso.text = "Curso: $teacherCourse"
 
         generateRandomEvents()
         val today = getCurrentDate(calendarView)
@@ -75,6 +109,13 @@ class TeacherActivity : Activity() {
                 showEditEventDialog(selectedDate)
             }
         }
+        handler.post(runnable)
+    }
+
+
+    override fun onPause() {
+        super.onPause()
+        handler.removeCallbacksAndMessages(null)
     }
 
     private fun generateRandomEvents() {
@@ -127,23 +168,33 @@ class TeacherActivity : Activity() {
         builder.show()
     }
 
-    private fun showEditGradeDialog(student: StudentModel, teacherGradeId: Int) {
+    private fun showEditGradeDialog(student: StudentModel, subjectId: Int) {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Editar calificación de ${student.name} ${student.surname}")
+        builder.setTitle("Editar nota de ${student.name} ${student.surname} en la asignatura")
 
-        val input = EditText(this)
-        input.setText(student.grade.toString())
-        input.hint = "Ingrese la nueva calificación"
+        val input = EditText(this).apply {
+            hint = "Ingrese la nueva nota (0-10)"
+            inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+        }
         builder.setView(input)
 
         builder.setPositiveButton("Guardar") { dialog, _ ->
-            val newGrade = input.text.toString().toIntOrNull()
-            if (newGrade != null) {
-                student.grade = newGrade
-                updateStudentGradeInDatabase(student, teacherGradeId) // Se pasa el courseId también
-                Toast.makeText(this, "Calificación actualizada", Toast.LENGTH_SHORT).show()
+            val newGrade = input.text.toString().toFloatOrNull()
+            if (newGrade != null && newGrade in 0.0..10.0) {
+                updateStudentGradeInDatabase(student.id, subjectId, newGrade)
+
+                val studentIndex = studentList.indexOfFirst { it.id == student.id }
+                if (studentIndex != -1) {
+                    studentList[studentIndex] = student.copy(grade = newGrade.toInt())
+                }
+
+                val updatedNames = studentList.map { "${it.name} ${it.surname} \n Asignatura: ${it.subjectName} - Nota: ${it.grade}" }
+                val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, updatedNames)
+                findViewById<ListView>(R.id.lvStudents).adapter = adapter
+
+                Toast.makeText(this, "Nota actualizada exitosamente", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, "Por favor ingresa una calificación válida", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Por favor ingrese un número válido entre 0 y 10", Toast.LENGTH_SHORT).show()
             }
             dialog.dismiss()
         }
@@ -152,22 +203,27 @@ class TeacherActivity : Activity() {
         builder.show()
     }
 
-    private fun updateStudentGradeInDatabase(student: StudentModel, teacherGradeId: Int) {
+    private fun updateStudentGradeInDatabase(studentId: Int, subjectId: Int, newGrade: Float) {
         val url = "http://10.0.2.2/school/update_student_grade.php"
 
-        val params = HashMap<String, String>()
-        params["studentId"] = student.id.toString()
-        params["grade"] = student.grade.toString()
-        params["courseId"] = teacherGradeId.toString()
+        val params = HashMap<String, String>().apply {
+            put("studentId", studentId.toString())
+            put("subjectId", subjectId.toString())
+            put("grade", newGrade.toString())
+        }
 
         val stringRequest = object : StringRequest(
             Request.Method.POST, url,
             Response.Listener { response ->
                 try {
-                    if (response == "success") {
-                        Toast.makeText(this, "Calificación actualizada exitosamente", Toast.LENGTH_SHORT).show()
+                    val jsonResponse = JSONObject(response)
+                    val status = jsonResponse.getString("status")
+                    val message = jsonResponse.getString("message")
+
+                    if (status == "success") {
+                        Toast.makeText(this, "Nota actualizada exitosamente", Toast.LENGTH_SHORT).show()
                     } else {
-                        Toast.makeText(this, "Error al actualizar la calificación", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Error: $message", Toast.LENGTH_SHORT).show()
                     }
                 } catch (e: Exception) {
                     Toast.makeText(this, "Error al procesar la respuesta: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -176,9 +232,7 @@ class TeacherActivity : Activity() {
             Response.ErrorListener { error ->
                 Toast.makeText(this, "Error al enviar la solicitud: ${error.message}", Toast.LENGTH_SHORT).show()
             }) {
-            override fun getParams(): Map<String, String> {
-                return params
-            }
+            override fun getParams(): Map<String, String> = params
         }
 
         val queue = Volley.newRequestQueue(this)
