@@ -1,8 +1,3 @@
 package com.example.notesmart.data.model
 
-data class GradeModel(
-    var id : Int,
-    var studentId : Int,
-    var subjectId : Int,
-    var grade : String,
-)
+data class Grade(val subjectName: String, val grade: Double)

@@ -21,4 +21,21 @@
     <string name="name_student">Nombre estudiante</string>
     <string name="surname_student">Apellidos estudiante</string>
     <string name="grade_student">Curso estudiante</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="profile_picture_new">Profile Picture</string>
+    <string name="cambiar_foto">Cambiar Foto</string>
+    <string name="foto_actual">Foto Actual</string>
+    <string name="foto_nueva">Foto Nueva</string>
+    <string name="correo_electr_nico">Correo Electrónico</string>
+    <string name="nombre_complete">Nombre complete</string>
+    <string name="n_mero_de_tel_fono">Número de teléfono</string>
+    <string name="nombre">Nombre</string>
+    <string name="n_mero_de_tel_fono_edit">Número de teléfono</string>
+    <string name="correo_electr_nico_edt_text">Correo electrónico</string>
+    <string name="guardar_cambios">Guardar Cambios</string>
+    <string name="uploadFiles">Subir archivos\n</string>
+    <string name="personal_area">Área personal</string>
+    <string name="subir_archivo">Subir Archivo</string>
+    <string name="archivo2_docx">Archivo2.docx</string>
+    <string name="borrar">Borrar</string>
 </resources>

@@ -13,10 +13,10 @@
         android:background="@color/blue"
         android:orientation="horizontal"
         android:padding="8dp"
+        android:gravity="center_vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:gravity="start|center_vertical">
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/ivStudentFoto"
@@ -29,9 +29,9 @@
             android:src="@drawable/ic_user" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="start|center_vertical"
+            android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
@@ -56,12 +56,11 @@
             android:id="@+id/tvStudentCurso"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="end"
             android:text="@string/grade_student"
             android:textColor="@android:color/white"
             android:textSize="14sp"
-            android:layout_marginStart="12dp"
-            android:gravity="end"
-            android:textStyle="italic"/>
+            android:textStyle="italic" />
     </LinearLayout>
 
     <android.widget.CalendarView
@@ -101,6 +100,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvEventos" />
 
+    <Button
+        android:id="@+id/btnEditarEvento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/editEvent"
+        android:enabled="false"
+        app:layout_constraintTop_toBottomOf="@id/tvEventosDelDia"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/btnSubirArchivos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/uploadFiles"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.489"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/uploadFilesTextView" />
+
     <ListView
         android:id="@+id/lvHorario"
         android:layout_width="0dp"
@@ -111,17 +132,19 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvEventosDelDia" />
-    <ListView
-        android:id="@+id/lvEventos"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnSubirArchivos" />
+
+    <TextView
+        android:id="@+id/uploadFilesTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/fuentemoderniz"
+        android:text="@string/personal_area"
+        android:textColor="@color/blue_darker"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvEventosDelDia" />
+        app:layout_constraintTop_toBottomOf="@+id/btnEditarEvento" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
