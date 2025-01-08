@@ -175,6 +175,7 @@ class TeacherActivity : Activity() {
         val input = EditText(this).apply {
             hint = "Ingrese la nueva nota (0-10)"
             inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+            setText(student.grade.toString())
         }
         builder.setView(input)
 
@@ -250,6 +251,9 @@ class TeacherActivity : Activity() {
                     val studentNames = mutableListOf<String>()
                     studentList.clear()
 
+                    var counter = 0
+                    val totalStudents = jsonArray.length()
+
                     for (i in 0 until jsonArray.length()) {
                         val studentJson = jsonArray.getJSONObject(i)
                         val id = studentJson.getInt("id")
@@ -274,7 +278,9 @@ class TeacherActivity : Activity() {
                             studentNames.add("$name $surname \n Asignatura: $subjectName - Nota: $grade")
                             studentList.add(student)
 
-                            if (i == jsonArray.length() - 1) {
+                            counter++
+
+                            if (counter == totalStudents) {
                                 runOnUiThread {
                                     val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, studentNames)
                                     lvStudents.adapter = adapter
@@ -293,7 +299,6 @@ class TeacherActivity : Activity() {
         val queue = Volley.newRequestQueue(this)
         queue.add(stringRequest)
     }
-
 
     private fun getSubjectName(subjectId: Int, callback: (String) -> Unit) {
         val url = "http://10.0.2.2/school/get_subject_name.php?subjectId=$subjectId"
