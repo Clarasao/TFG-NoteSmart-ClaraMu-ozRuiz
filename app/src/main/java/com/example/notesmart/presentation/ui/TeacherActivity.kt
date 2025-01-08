@@ -275,8 +275,10 @@ class TeacherActivity : Activity() {
                             studentList.add(student)
 
                             if (i == jsonArray.length() - 1) {
-                                val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, studentNames)
-                                lvStudents.adapter = adapter
+                                runOnUiThread {
+                                    val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, studentNames)
+                                    lvStudents.adapter = adapter
+                                }
                             }
                         }
                     }
@@ -291,6 +293,7 @@ class TeacherActivity : Activity() {
         val queue = Volley.newRequestQueue(this)
         queue.add(stringRequest)
     }
+
 
     private fun getSubjectName(subjectId: Int, callback: (String) -> Unit) {
         val url = "http://10.0.2.2/school/get_subject_name.php?subjectId=$subjectId"
