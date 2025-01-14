@@ -6,6 +6,7 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.os.Handler
 import android.text.InputType
+import android.util.Log
 import android.widget.*
 import com.android.volley.Request
 import com.android.volley.Response
@@ -159,7 +160,11 @@ class TeacherActivity : Activity() {
                 Toast.makeText(this, "Evento guardado para $date", Toast.LENGTH_SHORT).show()
                 updateEventosDelDia(date, findViewById(R.id.tvEventosDelDia))
             } else {
-                Toast.makeText(this, "Por favor ingresa una descripción del evento", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Por favor ingresa una descripción del evento",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
             dialog.dismiss()
         }
@@ -174,28 +179,47 @@ class TeacherActivity : Activity() {
 
         val input = EditText(this).apply {
             hint = "Ingrese la nueva nota (0-10)"
-            inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+            inputType = InputType.TYPE_CLASS_NUMBER
             setText(student.grade.toString())
         }
         builder.setView(input)
 
         builder.setPositiveButton("Guardar") { dialog, _ ->
-            val newGrade = input.text.toString().toFloatOrNull()
-            if (newGrade != null && newGrade in 0.0..10.0) {
-                updateStudentGradeInDatabase(student.id, subjectId, newGrade)
+            val newGradeText = input.text.toString()
 
-                val studentIndex = studentList.indexOfFirst { it.id == student.id }
-                if (studentIndex != -1) {
-                    studentList[studentIndex] = student.copy(grade = newGrade.toInt())
+            // Validar que el texto no esté vacío y sea un número válido
+            if (newGradeText.isNotBlank()) {
+                val newGrade = newGradeText.toIntOrNull()
+
+                if (newGrade != null && newGrade in 0..10) {
+                    updateStudentGradeInDatabase(student.id, subjectId, newGrade) // Asegúrate de implementar correctamente esta función
+
+                    // Actualizar la lista local
+                    val studentIndex = studentList.indexOfFirst { it.id == student.id }
+                    if (studentIndex != -1) {
+                        studentList[studentIndex] = student.copy(grade = newGrade)
+                    }
+
+                    // Refrescar el adaptador de la lista
+                    val updatedNames =
+                        studentList.map { "${it.name} ${it.surname} \n Asignatura: ${it.subjectName} - Nota: ${it.grade}" }
+                    val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, updatedNames)
+                    findViewById<ListView>(R.id.lvStudents).adapter = adapter
+
+                    Toast.makeText(this, "Nota actualizada exitosamente", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(
+                        this,
+                        "Por favor ingrese un número válido entre 0 y 10",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
-
-                val updatedNames = studentList.map { "${it.name} ${it.surname} \n Asignatura: ${it.subjectName} - Nota: ${it.grade}" }
-                val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, updatedNames)
-                findViewById<ListView>(R.id.lvStudents).adapter = adapter
-
-                Toast.makeText(this, "Nota actualizada exitosamente", Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, "Por favor ingrese un número válido entre 0 y 10", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Por favor ingrese un número válido entre 0 y 10",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
             dialog.dismiss()
         }
@@ -204,41 +228,44 @@ class TeacherActivity : Activity() {
         builder.show()
     }
 
-    private fun updateStudentGradeInDatabase(studentId: Int, subjectId: Int, newGrade: Float) {
-        val url = "http://10.0.2.2/school/update_student_grade.php"
 
+    private fun updateStudentGradeInDatabase(studentId: Int, subjectId: Int, newGrade: Int) {
+        val url = "http://10.0.2.2/school/update_student_grade.php"
         val params = HashMap<String, String>().apply {
             put("studentId", studentId.toString())
             put("subjectId", subjectId.toString())
             put("grade", newGrade.toString())
         }
 
-        val stringRequest = object : StringRequest(
-            Request.Method.POST, url,
-            Response.Listener { response ->
+        Log.d("UpdateGrade", "Enviando parámetros: $params")
+
+        val stringRequest = object : StringRequest(Request.Method.POST, url,
+            { response ->
                 try {
                     val jsonResponse = JSONObject(response)
                     val status = jsonResponse.getString("status")
                     val message = jsonResponse.getString("message")
-
                     if (status == "success") {
-                        Toast.makeText(this, "Nota actualizada exitosamente", Toast.LENGTH_SHORT).show()
+                        Log.d("UpdateGrade", "Nota actualizada en la base de datos.")
                     } else {
                         Toast.makeText(this, "Error: $message", Toast.LENGTH_SHORT).show()
                     }
                 } catch (e: Exception) {
-                    Toast.makeText(this, "Error al procesar la respuesta: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Log.e("UpdateGrade", "Error parsing response: ${e.message}")
+                    Toast.makeText(this, "Error al procesar la respuesta", Toast.LENGTH_SHORT).show()
                 }
             },
-            Response.ErrorListener { error ->
+            { error ->
+                Log.e("UpdateGrade", "Error en la solicitud: ${error.message}")
                 Toast.makeText(this, "Error al enviar la solicitud: ${error.message}", Toast.LENGTH_SHORT).show()
             }) {
             override fun getParams(): Map<String, String> = params
         }
 
-        val queue = Volley.newRequestQueue(this)
-        queue.add(stringRequest)
+        Volley.newRequestQueue(this).add(stringRequest)
     }
+
+
 
     private fun getStudents(courseId: Int, lvStudents: ListView) {
         val url = "http://10.0.2.2/school/get_students_with_subjects.php?courseId=$courseId"
@@ -282,7 +309,11 @@ class TeacherActivity : Activity() {
 
                             if (counter == totalStudents) {
                                 runOnUiThread {
-                                    val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, studentNames)
+                                    val adapter = ArrayAdapter(
+                                        this,
+                                        android.R.layout.simple_list_item_1,
+                                        studentNames
+                                    )
                                     lvStudents.adapter = adapter
                                 }
                             }
@@ -293,7 +324,11 @@ class TeacherActivity : Activity() {
                 }
             },
             { error ->
-                Toast.makeText(this, "Error al obtener los estudiantes: ${error.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Error al obtener los estudiantes: ${error.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             })
 
         val queue = Volley.newRequestQueue(this)
@@ -312,12 +347,17 @@ class TeacherActivity : Activity() {
                     subjectMap[subjectId] = subjectName
                     callback(subjectName)
                 } catch (e: JSONException) {
-                    Toast.makeText(this, "Error al procesar la respuesta", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Error al procesar la respuesta", Toast.LENGTH_SHORT)
+                        .show()
                     callback("Desconocida")
                 }
             },
             { error ->
-                Toast.makeText(this, "Error al obtener el nombre de la asignatura: ${error.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Error al obtener el nombre de la asignatura: ${error.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
                 callback("Desconocida")
             })
 
